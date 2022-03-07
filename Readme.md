@@ -23,7 +23,6 @@ Random scuba-diving samplings have been carried out in a marine reserve (*Tabarc
 library(tidyverse)
 library(ggplot2)
 library(sciplot)
-setwd("/Users/macbookairjulio/Desktop/Statistical analyses/ANOVA directory")
 ```
 ```{r include = FALSE}
 sampling_data <- read_csv("pescas.csv")
