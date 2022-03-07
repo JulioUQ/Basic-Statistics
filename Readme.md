@@ -55,6 +55,7 @@ ggplot(data=sampling_data, aes(Distance, abu, colour = Distance)) +
                   size=3, color="red") +
   ylab("Abundance (ind)")
 ```
+<img width="842" alt="Captura de pantalla 2022-03-07 a las 3 28 56" src="https://user-images.githubusercontent.com/93770563/156952887-e4159109-f0c8-4f4c-bae9-ed4fe8ffe825.png">
 
 Looking at the mean abundance of each distance. It is observed that near the reserve we find greater abundance values. At medium and far distances, it is seen that the mean abundances are quite similar. Although despite the fact that the maximum value in medium distance is greater than the maximum value in the far distance. The mean abundance in far distance is greater.
 
@@ -102,7 +103,7 @@ The k-s test shows that the data distribution in near and medium distances follo
 
 Now that we have fulfilled the statistical whims to perform a sufficiently robust ANOVA, with which to draw conclusions that may have weight in the scientific community :)
 
-Let's see if there are significant differences between the mean abundance at three distances of the marine protected area (MPA) of Alicante. The ANOVA equation looks like: **$X_{in} = \mu + D_{i}+e_{n}$**
+Let's see if there are significant differences between the mean abundance at three distances of the marine protected area (MPA) of Alicante. The ANOVA equation looks like: **$X(in) = mu + Di + en**
 
 ```{r}
 anova1 <- aov(sampling_data$abu~sampling_data$Distance)
@@ -125,7 +126,6 @@ ANOVA tells us if there are differences among group means, but not what the diff
 ```{r}
 TukeyHSD(anova1)
 ```
-
 - **diff** means the differences in mean levels of Distance
 - **lwr** corresponds to the minimum value of the confidence interval
 - **upr** corresponds to the maximum value of the confidence interval
@@ -140,6 +140,7 @@ The differences between means in which the confidence interval that encompasses 
 ```{r}
 plot(TukeyHSD(anova1))
 ```
+<img width="805" alt="Captura de pantalla 2022-03-07 a las 3 29 11" src="https://user-images.githubusercontent.com/93770563/156952936-efba7ec3-3040-447a-961f-d9d2e04ce124.png">
 
 **The significant groupwise differences** are any where the 95% confidence interval doesn’t include zero. This is another way of saying that the p-value for these pairwise differences is < 0.05.
 
@@ -165,8 +166,9 @@ lineplot.CI(Distance, abu, group = Season, data = sampling_data, cex = 2,
             xlab = "Distance", ylab = "Abundance", cex.lab = 1.5, x.leg = 2.5,
             col = c("blue","red", "purple"), pch = c(16,16,16))
 ```
+<img width="830" alt="Captura de pantalla 2022-03-07 a las 3 30 06" src="https://user-images.githubusercontent.com/93770563/156952967-949205fb-1de1-44ff-9255-25866c5dc052.png">
 
-At first view, it looks that the interaction effect over the overall abundance in the Distance and Season turns out to occur between Far and Medium distances. To statistical check if this differences are significant, we will perform a ***Two-way ANOVA***. The Two-way ANOVA equation looks like: **$X_{ijn} = \mu + D_{i}+ S_{j}+e_{n}$**
+At first view, it looks that the interaction effect over the overall abundance in the Distance and Season turns out to occur between Far and Medium distances. To statistical check if this differences are significant, we will perform a ***Two-way ANOVA***. The Two-way ANOVA equation looks like: **X(ijn) = mu + Di + Sj + en**
 
 In the two-way ANOVA example, we are modeling abundance as a function of type of Distance and Season. First we use ```aov()``` to run the model, then we use ```summary()``` to print the summary of the model
 
@@ -177,7 +179,7 @@ summary(anova2)
 
 Adding Season to the model seems to have made the model better: it reduced the residual variance (the residual sum of squares went from 14235 to 12676), and both Season and Distance are significantly difference (p-values < 0.05).
 
-To test whether the interaction among two factors have significant effect in **ANOVA**, simply use an asterisk instead of a plus-sign in the model. Now the equation incorporate the interaction term: **$X_{ijn} = \mu + D_{i} + S_{j} + D*S_{ij} + e_{n}$**
+To test whether the interaction among two factors have significant effect in **ANOVA**, simply use an asterisk instead of a plus-sign in the model. Now the equation incorporate the interaction term: **X(ijn) = mu + Di + Sj + D*S(ij) + en**
 
 ```{r}
 anova_interaction <- aov(abu ~ Distance*Season, data = sampling_data)
@@ -193,6 +195,7 @@ From this point, as we have found interaction effect. **We will analyze only the
 TukeyHSD(anova_interaction)
 plot(TukeyHSD(anova_interaction))
 ```
+<img width="794" alt="Captura de pantalla 2022-03-07 a las 3 30 28" src="https://user-images.githubusercontent.com/93770563/156953023-c12c7216-8502-4a11-9150-9c1b87a83962.png">
 
 ##### 1.3.4. **Conclusions from the test**
 
