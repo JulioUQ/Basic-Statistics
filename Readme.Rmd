@@ -1,16 +1,3 @@
----
-title: "ANOVA"
-author: "Julio UQ"
-date: "2/20/2022"
-output:
-  html_document: null
-  toc: yes
-  toc_depth: 2
-  lang: en-EN
-  pdf_document: default
-  word_document: default
----
-
 ### 1. **ANOVA**
 #### 1.1. **What is it and what is it for?**
 
