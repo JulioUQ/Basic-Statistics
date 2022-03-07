@@ -21,7 +21,6 @@ Random scuba-diving samplings have been carried out in a marine reserve (*Tabarc
 
 ```{r message=FALSE, include=FALSE}
 library(tidyverse)
-library(ggplot2)
 library(sciplot)
 ```
 ```{r include = FALSE}
