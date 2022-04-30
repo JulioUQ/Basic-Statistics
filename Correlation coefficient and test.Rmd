@@ -1,0 +1,128 @@
+---
+title: "Chapter 2"
+subtitle: "Correlation coefficient and correlation test"
+author: "Julio Ubeda Quesada^[Email: <julioubedaquesada@gmail.com>, Tlf: +34-645595857]"
+date: "First version: 27 April 2022. This version: `r format(Sys.Date(), '%d %B %Y')`."
+link-citations: yes
+linkcolor: blue
+fontsize: 12
+bibliography: references.bib
+csl: apa_7th.csl
+output: html_document
+---
+
+```{r, setup, include=FALSE}
+
+## Source
+setwd("~/Documents/Statistics material/Statistical-analyses/Generalize-Linear-Model-directory/Data")
+
+# Global settings
+
+knitr::opts_chunk$set(echo = FALSE, fig.pos = "H", fig.width=7, fig.height=6, tab.pos = "H", out.width = "100%", dev = "png", dpi = 300, collapse = TRUE, message = FALSE, warning = FALSE, comment = "#>")
+options(knitr.kable.NA = "")
+
+# Packages
+Packages = c("ggplot2", "tidyverse", "knitr", "kableExtra")  
+lapply(Packages, library, character.only = TRUE)
+
+# Data
+sampling_data <- read.delim("clor_vs_O.txt")
+
+# Models
+
+```
+
+## 1. **Correlation Pearson coefficient** *p*
+
+Correlations between variables is a common part of descriptive analysis. The correlation coefficient measures the relationship between two variables, mainly quantitative. Basically, how they are related to each other: which variable evolve in the same direction, which ones evolve in the opposite direction, and which ones are independent.
+
+The Pearson correlation coefficient between two variables is computed by the ***cor()*** function in R like: 
+
+```{r, pearson_correlation, echo=TRUE}
+# Pearson correlation between two variables
+cor(sampling_data$Chl_a, sampling_data$Disolved_O)
+```
+
+If any other correlation method wants to be used, it must be computed in the function adding the argument ***method = "spearman"*** (in case the spearman method is the wished one) to the *cor()* function. Run *?cor* for more information about the different methods available. 
+
+```{r, spearman_correlation, echo=TRUE}
+# Spearman correlation between two variables
+cor(sampling_data$Chl_a, sampling_data$Disolved_O, 
+    method = "spearman")
+```
+
+### 1.1 **Interpretation of a correlation coefficient**
+
+The correlation coefficient ranges from **-1 to 1**, and allow us to draw hipotheses in to ways:
+
+1. The **direction** of the relationship between the two variables. On the one hand, a **negative correlation** means that the two variables vary in **opposite directions** (if one increase, the other decrease, and viceversa). On the other hand, a **positive correlation** implies that the two variables vary in the same direction (if one increase/decrease, the other do so).   
+
+2. The **strength** of the relationship between the two variables. The closer to -1 or 1 the correlation coefficient, **stronger the relationship**. This means that a **correlation coefficient close to 0** indicates that two variables are **independent**.
+
+> As an illustration, the Pearson correlation between Chlorophyll A (*Chl_a*) and Dissolved oxygen (*Disolved_O*) found is 0.99, meaning that the two variables strongly vary in the same direction. This makes sense, since the concentration of chlorophyll A is proportional to the concentration of phytoplankton in the water (an autotrophic microorganism) whose fundamental function is the production of oxygen [@smith1988]. 
+
+### 1.2. **Visualization**
+
+Note that it is recommended to visualize the type of the relationship before interpreting the correlation coefficients, since outliers could greatly bias the coefficient. Although in this example, it is not the case.  
+
+Suppose we want to examine the relationship between Chlorophyll A (Chl_a) and Dissolved oxygen (Disolved_O). A good way to visualize a correlation between two variables is to draw a scatterplot of the two variables of interest:
+
+```{r, correlation_plot, echo=TRUE, out.width= "50%", fig.align='center', fig.cap="Figure 1. A correlation plot of Chlorophyll A and Disolved oxigen in the sampling."}
+# Scatterplot
+# I know that with less code is enough, but I like to customize my plots ;)
+
+ggplot(data=sampling_data, aes(Chl_a, Disolved_O)) +
+  geom_point(size = 3, color = "blue", shape = 23, fill = "blue") +
+  labs(x = "Chlorophyll A", y = "Dissolved Oxygen", title = "Chlorophyll A vs Dissolved Oxygen", tag = "R = 0.99") +
+  theme(panel.border = element_rect(linetype = "solid", fill = NA),
+        panel.background = element_rect(fill = "white"),
+        panel.grid.major = element_line(colour = "grey"),
+        plot.title = element_text(family = "Helvetica", face = "bold", size = (25), hjust = .5),
+        plot.tag = element_text(size = 15, face = "italic"),
+        plot.tag.position = c(0.2, 0.85),
+        axis.title.x = element_text(colour = "black", size = 20, angle = 0, hjust = .5, vjust = 0, margin = margin(t = 20)),
+        axis.text.x = element_text(colour = "black", size = 15, angle = 0, hjust = .5, vjust = 0.5),
+        axis.title.y = element_text(colour = "black", size = 20, angle = 90, hjust = .5, vjust = 0, margin = margin(r = 20)),
+        axis.text.y = element_text(colour = "black", size = 15, angle = 0, hjust = .5, vjust = 0))
+```
+
+If you are unfamiliar with the {ggplot2} package, you can draw the scatterplot using the plot() function from R base graphics, or using the [esquisse adding](https://statsandr.com/blog/rstudio-addins-or-how-to-make-your-coding-life-easier/#esquisse) to easily create plots using ggplot package
+
+## 2. **Correlation test**
+### **For two variables**
+
+A correlation coefficient different from 0 in the sample does not mean that the correlation (denoted *p*) is **significantly** different from 0. This needs to be tested with a known hypothesis test, called correlation test. Which is used to test whether the correlation between two variables is significantly different from 0 or not in the dataset. To do so, the data must cope with the two assumptions of independence of the data and [normality](https://statsandr.com/blog/do-my-data-follow-a-normal-distribution-a-note-on-the-most-widely-used-distribution-and-how-to-test-for-normality-in-r/).
+
+The null and alternative hypothesis for correlation test are as follows:
+
+- **H~0~**: *p* = 0 (meaning that there is no linear relationship between variables)
+- **H~1~**: *p* ≠ 0 (there is linear relationship between variables)
+
+In a nutshell, with the correlation test is obtained the amount of evidence to reject or not the null hypothesis, and then determine whether exist relationship between variables or not.
+
+Imagine that we wish to test if there is enough evidence to affirm that the 0.99 value of the correlation coefficient is significantly different to 0. So a Pearson correlation test is carried out to test it:
+
+```{r, correlation_test, echo=TRUE}
+cor.test(sampling_data$Chl_a, sampling_data$Disolved_O)
+```
+
+The p-value of the correlation test between these two variables is far lower than 0.05. At the 5% significance level, we do reject the null hypothesis of no correlation. We therefore conclude that we do reject the hypothesis that there is no linear relationship between the two variables.
+
+Note that the p-value of a correlation test is based on the correlation coefficient **and** the sample size. The larger the sample size and the more extreme the correlation (closer to -1 or 1), the more likely the null hypothesis of no correlation will be rejected. With a small sample size, it is thus possible to obtain a relatively large correlation in the sample (based on the correlation coefficient), but still find a correlation not significantly different from 0 in the population (based on the correlation test). For this reason, it is recommended to always perform a correlation test before interpreting a correlation coefficient to avoid flawed conclusions.
+
+## 3. **Correlation does not imply causation**
+
+A non-zero correlation between two variables does not necessarily mean that there is a cause and effect relationship between two variables, or in other words *" Correlation does not imply causation"*.
+
+Indeed, a non-zero correlation significant or not only means that changes in one variable are associates with changes in the other variable. Although, it does not indicate that variations in one variable CAUSE the variation in the other variable.
+
+There are different scenarios potentially responsable for this variation:
+
+- X affects Y.
+- Y affects X.
+- A third variable cause X and Y.
+- A combination o these three reasons.
+
+In the example given here is clear that there is a casual relationship between the two variables. It is obvious that if chlorophyll concentration in the water increase the dissolved oxygen will increse too. Nonetheless, this causal link is not always present even if the correlation is significant. @maurage2013 showed that, although there is a positive and significant correlation between chocolate consumption and the number of Nobel laureates, this correlation comes from the fact that a third variable, Gross Domestic Product (GDP), causes chocolate consumption and the number of Nobel laureates. They found that countries with higher GDP tend to have a higher level of chocolate consumption and scientific research (leading to more Nobel laureates).
+
+## 4. References
