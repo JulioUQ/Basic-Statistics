@@ -13,4 +13,4 @@ Although the order to start with the repository containts will depend on the use
 - **Chapter 5: Principal Componenet Analysis (PCA).**
 - **Chapter 6: PERMANOVA.**
 
-What are you waiting for to discover how to take advantage of your datasets, in addition to presenting your results in a striking and easy way to communicate!
+What are you waiting to discover how to take advantage of your datasets, in addition to presenting your results in a striking and easy way to communicate!
